@@ -31,13 +31,18 @@ class VoronoiMap:
                 min_distance = float("inf")
                 cluster = -1
                 for i in range(len(self.seeds)):
-                    if self.distance(self.seeds[i], Vertex(x,y)) < min_distance:
+                    d = self.distance(self.seeds[i], Vertex(x,y)) 
+                    if d < min_distance:
+                        min_distance = d 
                         cluster = i
                 
-                self._pixels[y].append(self.region_colors[i])
+                self._pixels[y].append(self.region_colors[cluster])
 
     def set_distance(self, distance_func):
         self.distance = distance_func
     
     def get_seeds(self):
         return self.seeds
+    
+    def get_colors(self):
+        return self.region_colors
