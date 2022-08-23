@@ -1,6 +1,9 @@
 import random
+import queue
 
-from roadmap import Vertex
+from graph import Vertex
+from voronoi.events import SiteEvent
+
 
 class VoronoiMap:
     def __init__(self, map_x, map_y, seed_amount=10, seeds=None):
@@ -8,15 +11,14 @@ class VoronoiMap:
             self.seeds = [Vertex(seed[0], seed[1]) for seed in seeds]
         else:
             self.seeds = [Vertex(random.randint(0,map_x), random.randint(0, map_y)) for i in range(seed_amount)]
-        self.edges=[]
+        
+        self.event_queue = queue.PriorityQueue()
+        self.event = None
 
-        self.seeds.sort(key=(lambda x: (x.y, x.x)))
-
-    def fortunes_algorithhm(self):
-        site_events = [v for v in self.seeds]
-        while len(site_events) > 0:
-            p = site_events.pop(0)
-
-    
-    def get_vertices(self):
-        return [(v.x, v.y) for v in self.seeds]
+        self.status_tree = None
+        
+    def initialize(self):
+        for seed in self.seeds:
+            site_event = SiteEvent(seed)
+            self.event_queue.put(site_event)
+        return self.event_queue
